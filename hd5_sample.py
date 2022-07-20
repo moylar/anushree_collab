@@ -30,8 +30,8 @@ file_name_csv = file_name_no_ext+'.csv'
 file_name_xls = file_name_no_ext+'.xlsx'
 try:
     df = pd.read_csv(file_name)
+    
 except:
-
     with open(file_name, newline='') as csvfile:
         csv_reader = csv.reader(csvfile, delimiter=',')
         line_count = 0
@@ -55,5 +55,42 @@ df2 = pd.read_hdf(file_name_hdf)
 
 print(df2)
 
+##########################################################################
+# Now some additional data verification in the  the sql_lit and the QCT_2022 files
+#########################################################################
+import sqlite3
+from sqlite3 import Error
 
-          
+try:
+    con = sqlite3.connect(r'C:\Users\aruna\Downloads\anushree_prj\justice40dac_mapping_tool\Data\gis_data.sqlite')
+except Error as e:
+   print(f'Error {e} while opening sql file')
+df3 = pd.read_sql_query("SELECT * from DAC_percentiles_data", con)
+df4 = pd.read_sql_query("SELECT * from Justice40DACIndices", con)
+con.close()
+print(df3.head(), df3.shape)
+print(df4.head(), df4.shape)
+try:
+    df1 = pd.read_csv(r'C:\Users\aruna\Downloads\anushree_prj\QCT2022.CSV')
+except:
+    print('Cannot read csv file')
+print(df1.head(), df1.shape)
+
+df3_list = df3["GEOID"].values.tolist()
+df4_list = df4["GEOID"].values.tolist()
+df1_list = df1["fips"].values.astype(str).tolist()
+
+
+
+common_geo_ids = list(set(df3_list) & set(df4_list))
+commmon_geo_ids2 = list(set(common_geo_ids) & set(df1_list))
+
+
+print(len(df3_list),len(df4_list), len(df1_list), len(common_geo_ids), len(commmon_geo_ids2))
+print(df3_list[:5])
+print(df4_list[:5])
+print(df1_list[:5])
+
+
+
+
