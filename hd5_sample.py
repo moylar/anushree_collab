@@ -85,7 +85,7 @@ df4_state_list = list(set(df4["state_code"].values.tolist()))
 common_geo_ids = list(set(df3_list) & set(df4_list))
 commmon_geo_ids2 = list(set(common_geo_ids) & set(df1_list))
 
-
+df1_statefp_list = list(set(df1["statefp"].values.astype(str).tolist()))
 print(len(df3_list),len(df4_list), len(df1_list), len(common_geo_ids), len(commmon_geo_ids2))
 print(df3_list[:5])
 print(df4_list[:5])
@@ -95,9 +95,9 @@ print(df1_list[:5])
 df5 = df4[df4['GEOID'].isin(commmon_geo_ids2)]
 df5_list = df5["state_code"].values.tolist()
 common_state_list = list(set(df5_list))
-print(len(df4_state_list), df4_state_list)
-print(len(common_state_list), common_state_list)
+print('State list in sqlLite:',len(df4_state_list), df4_state_list)
+print('Overlapping state list:',len(common_state_list), common_state_list)
 missing_states = list(set(df4_state_list) - set(common_state_list))
-print(len(missing_states), missing_states)
-
+print('Missing state list:',len(missing_states), missing_states)
+print('State list in QCT csv file:',len(df1_statefp_list), df1_statefp_list)
 
